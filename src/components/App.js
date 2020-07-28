@@ -5,6 +5,7 @@ import AboutPage from "./About/AboutPage";
 import Header from "./common/Header";
 import PageNotFound from "./PageNotFound";
 import CoursesPage from "./Courses/CoursesPage";
+import ManageCoursePage from "./Courses/ManageCoursePage";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
         <Route path="/home" component={HomePage} />
         <Route path="/about" component={AboutPage} />
         <Route path="/courses" component={CoursesPage} />
+        <Route path="/course/:slug" component={ManageCoursePage} />
+        <Route path="/course" component={ManageCoursePage} />
         <Redirect exact from="/" to="/home" />
         <Route component={PageNotFound} />
       </Switch>

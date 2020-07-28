@@ -1,22 +1,22 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import * as courseActions from "../../redux/actions/courseActions";
-import * as authorActions from "../../redux/actions/authorActions";
-import { bindActionCreators } from "redux";
+import { loadCourses } from "../../redux/actions/courseActions";
+import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import CourseList from "./CourseList";
 
 function CoursesPage(props) {
+  const { loadAuthors, loadCourses, courses } = props;
   useEffect(() => {
-    props.actions.loadCourses();
-    props.actions.loadAuthors();
+    loadCourses();
+    loadAuthors();
   }, []);
 
   return (
     <form>
-      <h2>CoursesPage</h2>
+      <h2>This is the Course Page</h2>
 
-      <CourseList courses={props.courses} />
+      <CourseList courses={courses} />
     </form>
   );
 }
@@ -24,7 +24,8 @@ function CoursesPage(props) {
 CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
   authors: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
+  loadAuthors: PropTypes.func.isRequired,
+  loadCourses: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -40,11 +41,9 @@ const mapStateToProps = state => ({
   authors: state.authors
 });
 
-const mapDispatchToProps = dispatch => ({
-  actions: {
-    loadCourses: bindActionCreators(courseActions.loadCourses, dispatch),
-    loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch)
-  }
-});
+const mapDispatchToProps = {
+  loadCourses,
+  loadAuthors
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
