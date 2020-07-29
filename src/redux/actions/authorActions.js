@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import * as apiAuthors from "../../api/authorApi";
+import { beginApiCall } from "./apiStatusActions";
 
 export const loadAuthorsSuccess = authors => ({
   type: types.LOAD_AUTHORS_SUCCESS,
@@ -8,6 +9,7 @@ export const loadAuthorsSuccess = authors => ({
 
 export const loadAuthors = () => {
   return async dispatch => {
+    dispatch(beginApiCall());
     try {
       const authors = await apiAuthors.getAuthors();
       dispatch(loadAuthorsSuccess(authors));

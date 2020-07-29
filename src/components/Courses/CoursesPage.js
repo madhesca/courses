@@ -4,6 +4,8 @@ import { loadCourses } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import CourseList from "./CourseList";
+import { Link } from "react-router-dom";
+import Spinner from "../common/Spinner";
 
 function CoursesPage(props) {
   const { loadAuthors, loadCourses, courses } = props;
@@ -13,11 +15,21 @@ function CoursesPage(props) {
   }, []);
 
   return (
-    <form>
+    <>
       <h2>This is the Course Page</h2>
-
-      <CourseList courses={courses} />
-    </form>
+      {props.loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Link to="/course">
+            <button style={{ marginBottom: "20px" }} className="btn btn-primary">
+              Add Course
+            </button>
+          </Link>
+          <CourseList courses={props.courses} />
+        </>
+      )}
+    </>
   );
 }
 
@@ -25,7 +37,8 @@ CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
   authors: PropTypes.array.isRequired,
   loadAuthors: PropTypes.func.isRequired,
-  loadCourses: PropTypes.func.isRequired
+  loadCourses: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -38,7 +51,8 @@ const mapStateToProps = state => ({
             authorName: state.authors.find(a => a.id === course.authorId).name
           };
         }),
-  authors: state.authors
+  authors: state.authors,
+  loading: state.apiCallsInProgress > 0
 });
 
 const mapDispatchToProps = {
