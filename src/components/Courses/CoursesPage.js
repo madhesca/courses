@@ -1,18 +1,29 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { loadCourses } from "../../redux/actions/courseActions";
+import { loadCourses, deleteCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import CourseList from "./CourseList";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
+import { toast } from "react-toastify";
 
 function CoursesPage(props) {
-  const { loadAuthors, loadCourses, courses } = props;
+  const { loadAuthors, loadCourses } = props;
   useEffect(() => {
     loadCourses();
     loadAuthors();
   }, []);
+
+  async function handleDeleteCourse(course) {
+    toast.success("Course Deleted");
+
+    try {
+      await props.deleteCourse(course);
+    } catch (error) {
+      toast.error("Delete Failed" + error.message, { autoClose: false });
+    }
+  }
 
   return (
     <>
@@ -26,7 +37,7 @@ function CoursesPage(props) {
               Add Course
             </button>
           </Link>
-          <CourseList courses={props.courses} />
+          <CourseList onDeleteClick={handleDeleteCourse} courses={props.courses} />
         </>
       )}
     </>
@@ -38,6 +49,7 @@ CoursesPage.propTypes = {
   authors: PropTypes.array.isRequired,
   loadAuthors: PropTypes.func.isRequired,
   loadCourses: PropTypes.func.isRequired,
+  deleteCourse: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired
 };
 
@@ -57,7 +69,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   loadCourses,
-  loadAuthors
+  loadAuthors,
+  deleteCourse
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
